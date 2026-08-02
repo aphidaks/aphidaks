@@ -1,20 +1,16 @@
 name: Refresh Dropbox Access Token
-
 on:
   schedule:
     - cron: '0 */3 * * *'   # every 3 hours — comfortably inside the 4-hour token life
   workflow_dispatch: {}      # lets you trigger it manually from the Actions tab too
-
 permissions:
   contents: write
-
 jobs:
   refresh:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-
       - name: Request fresh Dropbox access token
         env:
           DROPBOX_APP_KEY: ${{ secrets.DROPBOX_APP_KEY }}
@@ -26,30 +22,26 @@ jobs:
             -d refresh_token="$DROPBOX_REFRESH_TOKEN" \
             -d client_id="$DROPBOX_APP_KEY" \
             -d client_secret="$DROPBOX_APP_SECRET")
-
           ACCESS_TOKEN=$(echo "$RESPONSE" | jq -r '.access_token // empty')
           EXPIRES_IN=$(echo "$RESPONSE" | jq -r '.expires_in // empty')
-
           if [ -z "$ACCESS_TOKEN" ]; then
             echo "Dropbox token refresh failed. Response was:"
             echo "$RESPONSE"
             exit 1
           fi
-
           EXPIRES_AT=$(( $(date +%s) + EXPIRES_IN ))
-
-          cat > dropbox-token.json <<EOF
+          mkdir -p sirenosc
+          cat > sirenosc/dropbox-token.json <<EOF
           {
             "access_token": "$ACCESS_TOKEN",
             "expires_at": $EXPIRES_AT,
             "generated_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           }
           EOF
-
       - name: Commit updated token file
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add dropbox-token.json
+          git add sirenosc/dropbox-token.json
           git diff --cached --quiet || git commit -m "chore: refresh Dropbox access token"
           git push
