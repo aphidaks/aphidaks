@@ -19053,17 +19053,32 @@ function _loadPresetIR(presetKey, nameElId, statusElId, onDecoded) {
   
   
   
-  var DROPBOX_ACCESS_TOKEN = 'sl.u.AGp_Pvem8a-iFk65UQTAbWKKvtvPEAF2OA3wH5iHJWcyobOuNdv9MZXV7rWWdza04YE_0vTyfoHDgLH7enp5Gj96sl5l4DTZyyvmSwl5wE-HanzycpC0kEFA0QDdLORHXNY288_Voi7R3yClw7xDV7o0agNmAfQEz3miJwVfZgrnHjUvEep25qBdrqWkP0HZCvMvjaWbq0GJAaVg_Yov8BS90aWXhLyHPfKR9yxeP1SW-Oc580Ji0qTaDFOpUAIO9Sw4Qg5jW65c-4o0fNnlPGS4NM-QO7p6tgrw5D67mvkzd7w6IY3qkur1jIXo3F9wKgr5l4aMvXLw7V1d4tCY0NGIUJnld-WGacljwGpl4KjK0SHvnXift3tUQVA4C0J0K8yqoSy9RINytof6Ot_xAFr4WIv6uUX75iQVKBwzFLGeI3-NAkJq-upBbLOdt3539aa-Jn-XSbvg4HFqSMjAu4bsSPd56HIrRY2M2x_GW-oCtVMqGA6VGEKHTi5qqhZMxvFtDQjtZNjWuTdeWfjtb5d45vwT9B2RorohUz_f0ofdSVBOzN_I1CpG0zth4PXhpoTREGk1UJWz8AKvQSGoNw4UUB135EpBjiaiXJpMMr7MT91pZtaUQJfO7d5tyqDT19DCr2VMVwI_XbDl1P28rutSgUgyfRb7GBViIpxPI4wnHNaVRdz06H7dHdmOd8ln_Zwbebp2LyheDKMechKxHAyrfLP4FW6Ca1gZtzkhJIGU2A0lk6lHQEsZabZONnQOxCnp6fg7i7adydHSPRXiQpIh9iw8X7RTLGQ1vyS6XI7nA-5bTcLkaoUE0oLaOO8LV-SgKqCL0c9kgBcR_gq9lm3Uc2UfDvAEyPpVx1F9Abrbs07113UTWjKYV_cjs7X95OSmMI65euMaoSP3uN0pDSBf3lfIUpBdW5J2f4m07NsM-H5PqYkPEEbj_w6vlGfDwkx_0q-yXosGovAusGu2iku5AxNl4o6RsTKSWZqkCBCkYFZp9eNrr2rjAUBR4kCDh6tJeUTJMAqmUtl0JEHzIxjcmKOyj91PrCZO0Qtxu2vAAzwcnVMdaD9G4q_RU1uAEQeTRRy0tALwY85ltJ3BgMbLPnyEiodl4RNRPa4gXtqzwTUHAB1MJpoHoOefgqhALv59F6du5VVweAFoUUjyg4ksCibFj92Q1UbLqT09CCo8yq1Qe5SGUQtPpgK0aGaq4_GErheaCKGjwanxSIx7evO2-hApiuCPXz874GyFY4CtYAHwTZtCe3yZ8y3eZLuGYg68gXaI-c1JopJB8eu3hYspvqBypmg57ZV_Y1hD8rgbF5WfwFHptFx9dIuVbDqTliH9sEcUlmmaXr0n2gF-SF_qUD7ldr01Xg8Q4JIBwFgjQNv3JseASXIeSMFN9vvgraWTmCVMLO7_MRpoSL3otvmdvfdcm2SZdRWDHJgjfLgaDuV8mGvcXNKc5ny7orMXWPcEdZemT2XE0hWbq2Pv9m_C'; 
-  var DROPBOX_FOLDER_PATH  = ''; 
+  var DROPBOX_FOLDER_PATH = '';
+
+  var _dbxTokenCache = null;
+
+  function _dbxGetAccessToken() {
+    if (_dbxTokenCache) return Promise.resolve(_dbxTokenCache);
+    return fetch('dropbox-token.json', {cache: 'no-store'}).then(function(r) {
+      if (!r.ok) throw new Error('dropbox-token.json not found (has the refresh-dropbox-token Action run yet?)');
+      return r.json();
+    }).then(function(data) {
+      if (!data.access_token) throw new Error('dropbox-token.json has no access_token');
+      _dbxTokenCache = data.access_token;
+      return _dbxTokenCache;
+    });
+  }
 
   function _dropboxApiCall(url, body) {
-    return fetch(url, {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + DROPBOX_ACCESS_TOKEN,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body || {})
+    return _dbxGetAccessToken().then(function(accessToken) {
+      return fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + accessToken,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body || {})
+      });
     }).then(function(r) {
       if (!r.ok) return r.text().then(function(t) { throw new Error('Dropbox API ' + r.status + ': ' + t); });
       return r.json();
@@ -19090,12 +19105,14 @@ function _loadPresetIR(presetKey, nameElId, statusElId, onDecoded) {
   
   
   function _dropboxDownloadFile(path) {
-    return fetch('https://content.dropboxapi.com/2/files/download', {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + DROPBOX_ACCESS_TOKEN,
-        'Dropbox-API-Arg': JSON.stringify({path: path})
-      }
+    return _dbxGetAccessToken().then(function(accessToken) {
+      return fetch('https://content.dropboxapi.com/2/files/download', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + accessToken,
+          'Dropbox-API-Arg': JSON.stringify({path: path})
+        }
+      });
     }).then(function(r) {
       if (!r.ok) throw new Error('Dropbox download failed (' + r.status + '): ' + path);
       return r.blob();
@@ -19185,99 +19202,7 @@ function _loadPresetIR(presetKey, nameElId, statusElId, onDecoded) {
   
   (function() {
     var menuPresetList = document.getElementById('menuPresetList');
-    if (!menuPresetList) return;
-
-    function existingFilenames() {
-      var set = {};
-      menuPresetList.querySelectorAll('.menu-preset-item').forEach(function(el) {
-        var f = el.getAttribute('data-filename') || (el.getAttribute('data-file') || '').split('/').pop();
-        if (f) set[f.toLowerCase()] = true;
-      });
-      return set;
-    }
-
-    function prettyNameFromFilename(filename) {
-      return filename.replace(/\.oscp$/i, '').replace(/[_-]+/g, ' ')
-        .replace(/\b\w/g, function(c) { return c.toUpperCase(); });
-    }
-
-    function addPresetItem(filename) {
-      var seen = existingFilenames();
-      if (seen[filename.toLowerCase()]) return; 
-      var item = document.createElement('div');
-      item.className = 'menu-preset-item';
-      item.setAttribute('data-file', 'presets/' + filename);
-      item.textContent = prettyNameFromFilename(filename);
-      menuPresetList.appendChild(item);
-      if (_wirePresetItem) _wirePresetItem(item);
-
-      
-      
-      
-      function tryLabel(attemptsLeft) {
-        if (typeof JSZip === 'undefined') {
-          if (attemptsLeft <= 0) return;
-          setTimeout(function() { tryLabel(attemptsLeft - 1); }, 150);
-          return;
-        }
-        fetch('presets/' + filename).then(function(r) {
-          if (!r.ok) throw new Error('fetch failed');
-          return r.blob();
-        }).then(function(blob) {
-          return JSZip.loadAsync(blob);
-        }).then(function(zip) {
-          var mf = zip.file('main.json');
-          if (!mf) return;
-          return mf.async('string').then(function(text) {
-            try {
-              var d = JSON.parse(text);
-              var label = [_abbreviateManufacturer(d.presetManufacturer), d.presetModel].filter(Boolean).join(' ');
-              if (label) item.textContent = label;
-            } catch (e) {}
-          });
-        }).catch(function() {  });
-      }
-      tryLabel(50);
-    }
-
-    function addPresetsFromList(filenames) {
-      filenames.forEach(function(name) {
-        if (/\.oscp$/i.test(name)) addPresetItem(name.split('/').pop());
-      });
-    }
-
-    
-    fetch('presets/manifest.json').then(function(r) {
-      if (!r.ok) throw new Error('no manifest');
-      return r.json();
-    }).then(function(list) {
-      if (Array.isArray(list)) addPresetsFromList(list);
-    }).catch(function() {
-      
-      fetch('presets/').then(function(r) {
-        if (!r.ok) throw new Error('no listing');
-        return r.text();
-      }).then(function(html) {
-        var found = [];
-        var re = /href\s*=\s*["']([^"']+\.oscp)["']/gi;
-        var m;
-        while ((m = re.exec(html)) !== null) {
-          try { found.push(decodeURIComponent(m[1])); } catch (e) { found.push(m[1]); }
-        }
-        addPresetsFromList(found);
-      }).catch(function() {  });
-    });
-  })();
-
-  
-  
-  
-  
-  
-  
-  (function() {
-    var menuPresetList = document.getElementById('menuPresetList');
-    if (!menuPresetList || !DROPBOX_ACCESS_TOKEN) return; 
+    if (!menuPresetList) { console.warn('[Dropbox] #menuPresetList not found in DOM — skipping.'); return; }
 
     function existingFilenames() {
       var set = {};
@@ -19329,10 +19254,12 @@ function _loadPresetIR(presetKey, nameElId, statusElId, onDecoded) {
       tryLabel(50);
     }
 
+    console.log('[Dropbox] Listing presets in "' + (DROPBOX_FOLDER_PATH || '/') + '"...');
     _dropboxListOscpFiles().then(function(entries) {
+      console.log('[Dropbox] Found ' + entries.length + ' .oscp file(s).');
       entries.forEach(addDropboxPresetItem);
     }).catch(function(err) {
-      console.warn('[Dropbox] Could not list presets folder — check DROPBOX_ACCESS_TOKEN / DROPBOX_FOLDER_PATH.', err);
+      console.warn('[Dropbox] Could not list presets folder — check dropbox-token.json / the refresh-dropbox-token Action / DROPBOX_FOLDER_PATH.', err);
     });
   })();
 
