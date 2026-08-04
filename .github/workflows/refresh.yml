@@ -2,8 +2,8 @@ name: Refresh Dropbox Access Token
 
 on:
   schedule:
-    - cron: '13 */3 * * *'   # :13 past, every 3 hours — avoids GitHub's top-of-hour high-load delay window
-  workflow_dispatch: {}      # lets you trigger it manually from the Actions tab too
+    - cron: '13 * * * *'   # i changed it to per hour because github is a bitch
+  workflow_dispatch: {}     
 
 permissions:
   contents: write
