@@ -1,9 +1,7 @@
 name: Refresh Dropbox Access Token
 
 on:
-  schedule:
-    - cron: '13 * * * *'   # i changed it to per hour because github is a bitch
-  workflow_dispatch: {}     
+  workflow_dispatch: {}     # triggered with cron because github is a bitch
 
 permissions:
   contents: write
