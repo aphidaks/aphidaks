@@ -1,0 +1,60 @@
+<-- sirenosc version redirect bullshit -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Please Wait.</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body { font-family: system-ui, sans-serif; display: grid; place-items: center; height: 100vh; margin: 0; }
+</style>
+</head>
+<body>
+<p id="msg">Finding latest version.</p>
+
+<script>
+const cmp = (a, b) => {
+  const pa = a.slice(1).split(".").map(Number);
+  const pb = b.slice(1).split(".").map(Number);
+  for (let i = 0; i < 3; i++) if (pa[i] !== pb[i]) return pb[i] - pa[i];
+  return 0;
+};
+
+async function discoverVersions() {
+  try {
+    const res = await fetch("./", { cache: "no-store" });
+    if (!res.ok) return [];
+    const html = await res.text();
+    const found = [...html.matchAll(/href="\.?\/?(v\d+\.\d+\.\d+)\/?"/g)].map(m => m[1]);
+    return [...new Set(found)];
+  } catch (e) {
+    return [];
+  }
+}
+
+async function hasLatest(version) {
+  try {
+    const res = await fetch(`${version}/latest`, { cache: "no-store" });
+    if (!res.ok) return false;
+    const type = res.headers.get("content-type") || "";
+    return !type.includes("text/html");
+  } catch (e) {
+    return false;
+  }
+}
+
+(async () => {
+  const versions = (await discoverVersions()).sort(cmp);
+  for (const v of versions) {
+    if (await hasLatest(v)) {
+      document.getElementById("msg").textContent = `Redirecting to ${v}…`;
+      location.replace(`${v}/`);
+      return;
+    }
+  }
+  document.getElementById("msg").textContent = "The latest version was not found.";
+})();
+</script>
+</body>
+</html>
