@@ -6,14 +6,14 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title> Please Wait </title></title>
+<title>Please Wait</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-  body { font-family: system-ui, sans-serif; display: grid; place-items: center; height: 100vh; margin: 0; }
+  html, body { margin: 0; height: 100%; background: #fff; }
+  @media (prefers-color-scheme: dark) { html, body { background: #000; } }
 </style>
 </head>
 <body>
-<p id="msg">finding latest</p>
 
 <script>
 const API = "https://api.github.com/repos/aphidaks/aphidaks/contents/sirenosc";
@@ -51,12 +51,11 @@ async function hasLatest(version) {
   const versions = (await discoverVersions()).sort(cmp);
   for (const v of versions) {
     if (await hasLatest(v)) {
-      document.getElementById("msg").textContent = `Redirecting to ${v}…`;
       location.replace(`${v}/`);
       return;
     }
   }
-  document.getElementById("msg").textContent = "The latest version has not been found.";
+  console.warn("The latest version has not been found.");
 })();
 </script>
 </body>
