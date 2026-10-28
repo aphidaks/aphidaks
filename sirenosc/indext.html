@@ -1,19 +1,23 @@
-<!-- sirenosc version redirect bullshit -->
+<!-- sirenosc latest version redirect - cass -->
+<!-- do not modify, when cloning the git update the api link -->
+<!-- 2026/10/28 -->
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Please Wait.</title>
+<title> Please Wait </title></title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   body { font-family: system-ui, sans-serif; display: grid; place-items: center; height: 100vh; margin: 0; }
 </style>
 </head>
 <body>
-<p id="msg">Finding latest version.</p>
+<p id="msg">finding latest</p>
 
 <script>
+const API = "https://api.github.com/repos/aphidaks/aphidaks/contents/sirenosc";
+
 const cmp = (a, b) => {
   const pa = a.slice(1).split(".").map(Number);
   const pb = b.slice(1).split(".").map(Number);
@@ -23,11 +27,12 @@ const cmp = (a, b) => {
 
 async function discoverVersions() {
   try {
-    const res = await fetch("./", { cache: "no-store" });
+    const res = await fetch(API, { cache: "no-store" });
     if (!res.ok) return [];
-    const html = await res.text();
-    const found = [...html.matchAll(/href="\.?\/?(v\d+\.\d+\.\d+)\/?"/g)].map(m => m[1]);
-    return [...new Set(found)];
+    const items = await res.json();
+    return items
+      .filter(i => i.type === "dir" && /^v\d+\.\d+\.\d+$/.test(i.name))
+      .map(i => i.name);
   } catch (e) {
     return [];
   }
@@ -36,9 +41,7 @@ async function discoverVersions() {
 async function hasLatest(version) {
   try {
     const res = await fetch(`${version}/latest`, { cache: "no-store" });
-    if (!res.ok) return false;
-    const type = res.headers.get("content-type") || "";
-    return !type.includes("text/html");
+    return res.ok;
   } catch (e) {
     return false;
   }
@@ -53,7 +56,7 @@ async function hasLatest(version) {
       return;
     }
   }
-  document.getElementById("msg").textContent = "The latest version was not found.";
+  document.getElementById("msg").textContent = "The latest version has not been found.";
 })();
 </script>
 </body>
