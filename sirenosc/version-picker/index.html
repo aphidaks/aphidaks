@@ -123,23 +123,17 @@ async function hasLatest(version) {
   }
 }
 
-// "Last Modified" header of that version's HTML file
-async function lastModified(version) {
-  const url = `${BASE}${version}/`;
-  for (const method of ["HEAD", "GET"]) {
-    try {
-      const res = await fetch(url, { method, cache: "no-store" });
-      if (!res.ok) continue;
-      const h = res.headers.get("last-modified");
-      const d = h ? new Date(h) : null;
-      if (d && !isNaN(d)) return d;
-      return null;
-    } catch (e) { /* try the next method */ }
+// release date from timestamp.txt in that version's folder (YYYY-MM-DD, e.g. 2026-10-01)
+async function getDate(version) {
+  try {
+    const res = await fetch(`${BASE}${version}/timestamp.txt`, { cache: "no-store" });
+    if (!res.ok) return null;
+    const t = (await res.text()).replace(/^\uFEFF/, "").trim();
+    return /^\d{4}-\d{2}-\d{2}$/.test(t) ? t : null;
+  } catch (e) {
+    return null;
   }
-  return null;
 }
-
-const fmtDate = d => d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
 
 function show(which) {
   $("loading").style.display = which === "loading" ? "flex" : "none";
@@ -191,10 +185,10 @@ async function load() {
 
   // release dates fill in as they arrive
   versions.forEach(async v => {
-    const d = await lastModified(v);
+    const d = await getDate(v);
     const el = document.querySelector(`.vrow[data-v="${v}"] .d`);
     if (!el) return;
-    el.textContent = d ? fmtDate(d) : "Unknown";
+    el.textContent = d || "Unknown";
     el.classList.toggle("off", !d);
   });
 
