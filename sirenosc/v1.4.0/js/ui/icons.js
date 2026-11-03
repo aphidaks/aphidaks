@@ -1,0 +1,1 @@
+window.SI=function(n){return '<svg class="si" aria-hidden="true"><use href="#si-'+n+'"/></svg>';};
