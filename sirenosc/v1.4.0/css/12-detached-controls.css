@@ -1,0 +1,26 @@
+
+#controlsSection.controls-detached{
+  position:fixed;
+  z-index:5000;
+  width:260px;
+  max-height:85vh;
+  overflow-y:auto;
+  box-shadow:0 8px 30px rgba(0,0,0,.6);
+  margin:0;
+}
+#controlsSecTitle{ touch-action:none; }
+#controlsSection.controls-detached #controlsSecTitle{ cursor:grab; }
+#controlsSection.controls-detached #controlsSecTitle:active{ cursor:grabbing; }
+#btnDetachControls.active{ color:var(--accent) !important; border-color:var(--accent) !important; }
+#controlsSection.controls-compact #controlsBtnRow{
+  flex-direction:row !important;
+  flex-wrap:wrap !important;
+}
+#controlsSection.controls-compact #controlsBtnRow .vbtn{
+  width:auto !important;
+  flex:1 1 30%;
+  min-width:0;
+}
+#controlsSection.controls-compact #brakeOffsetEntry{
+  display:none !important;
+}

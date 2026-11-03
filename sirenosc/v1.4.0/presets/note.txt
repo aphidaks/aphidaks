@@ -1,0 +1,14 @@
+Put every .oscp preset in this folder (they are all embedded automatically).
+
+The PRESETS menu is controlled by presets/presets.json:
+{
+ "default": { "presetname": "DEFAULT PRESET", "presetfile": "default.oscp", "available": true },
+ "presets": [
+  { "presetname": "Name shown in the list", "presetfile": "FILE.oscp", "available": true },
+  { "presetname": "Not ready yet", "presetfile": "later.oscp", "available": false }
+ ]
+}
+
+presetname = text in the list. presetfile = file name in this folder (not case sensitive).
+available = true -> clickable. false -> greyed out with a small "coming soon" (the file does not need to exist yet).
+"default" is listed first and is the one used by RESET and by the first start of the app.

@@ -1,0 +1,42 @@
+
+  #exportMp3Popup .mfile-popup-box{max-height:90vh;overflow-y:auto}
+  #exportMp3Popup input[type="text"]{text-transform:none !important}
+  #exportMp3Popup .mp3-sec{font-size:8px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin:4px 0 6px;padding-top:10px;border-top:1px solid var(--border)}
+  #exportMp3Popup .mp3-len{display:flex;gap:6px;align-items:center}
+  #exportMp3Popup .mp3-len input{width:56px;text-align:center}
+  #exportMp3Popup .mp3-len-total{margin-left:auto;color:var(--accent)}
+  #exportMp3Popup .mp3-quick{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+  #exportMp3Popup .mp3-hint{font-size:8px;letter-spacing:1px;color:var(--muted);margin-top:4px;line-height:1.5}
+  #mp3MacroList{border:1px solid var(--border);border-radius:2px;margin-bottom:8px;max-height:150px;overflow-y:auto}
+  .mp3-macro-row{display:flex;align-items:center;gap:6px;padding:5px 10px;border-bottom:1px solid var(--border)}
+  .mp3-macro-row:last-child{border-bottom:none}
+  .mp3-macro-name{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+  .mp3-macro-type{color:var(--muted)}
+  .mp3-macro-state{color:var(--accent)}
+  .mp3-macro-x{background:transparent;border:none;color:var(--muted);cursor:pointer;padding:0 4px}
+  .mp3-macro-x:hover{color:var(--text)}
+  .mp3-macro-empty{padding:8px 10px;color:var(--muted);letter-spacing:1px}
+  #mp3Picker{display:none;border:1px solid var(--accent);border-radius:2px;padding:8px;margin-bottom:8px;background:var(--inset2)}
+  #mp3Picker.show{display:block}
+  #mp3PickerList{border:1px solid var(--border);border-radius:2px;max-height:130px;overflow-y:auto;margin:6px 0}
+  .mp3-pick-row{display:flex;gap:6px;padding:5px 10px;border-bottom:1px solid var(--border);cursor:pointer}
+  .mp3-pick-row:last-child{border-bottom:none}
+  .mp3-pick-row:hover{background:var(--panel2)}
+  .mp3-pick-row.sel{background:var(--panel2);color:var(--accent)}
+  .mp3-pick-row .t{margin-left:auto;color:var(--muted)}
+  #mp3StateBox{display:none;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+  #mp3StateBox.show{display:flex}
+  #mp3StateBox input[type=range]{flex:1;min-width:100px}
+  #mp3Status{min-height:12px;margin:0 0 10px;color:var(--warn);letter-spacing:1px}
+  #mp3ExpProg{display:none;padding:6px 0 2px;font-family:'Share Tech Mono',monospace;letter-spacing:1.5px;text-transform:uppercase}
+  .mfile-popup-box.exporting > *:not(.mfile-popup-title):not(#mp3ExpProg){display:none !important}
+  .mfile-popup-box.exporting #mp3ExpProg{display:block}
+  #mp3ExpTxt{font-size:12px;margin-bottom:8px;color:var(--text)}
+  #mp3ExpTrack{height:6px;background:var(--border);margin-bottom:14px}
+  #mp3ExpFill{height:100%;width:0;background:var(--accent);transition:width .15s linear}
+  .mfile-popup-box.exporting.finished #mp3ExpFill{background:var(--ok,#3ecf8e)}
+  .mfile-popup-box.finished #mp3ExpWait{display:none}
+  #mp3ExpWait{margin:-6px 0 14px}
+  #mp3ExpClose{display:none}
+  .mfile-popup-box.finished #mp3ExpClose{display:inline-block}
+  .mfile-popup-box.finished #mp3ExpCancel{display:none}

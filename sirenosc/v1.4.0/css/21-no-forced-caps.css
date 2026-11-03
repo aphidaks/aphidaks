@@ -1,0 +1,2 @@
+
+input[type=text]:not(#_nc), input:not([type]):not(#_nc), input[type=search]:not(#_nc), input[type=email]:not(#_nc), input[type=url]:not(#_nc), input[type=password]:not(#_nc), input[type=tel]:not(#_nc), textarea:not(#_nc), [contenteditable=true]:not(#_nc){ text-transform:none !important; }

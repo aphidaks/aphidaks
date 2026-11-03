@@ -1,0 +1,8 @@
+{
+  "default": {
+    "presetname": "DEFAULT PRESET (THUNDERBOLT 1003)",
+    "presetfile": "default.oscp",
+    "available": true
+  },
+  "presets": []
+}

@@ -1,0 +1,16 @@
+
+#ceCanvas.ce-test .ce-textc,#ceInlineHost #ceCanvas .ce-textc,#ceCanvas.ce-test text,#ceCanvas.ce-test tspan,#ceInlineHost #ceCanvas text,#ceInlineHost #ceCanvas tspan{pointer-events:none !important;user-select:none;-webkit-user-select:none}
+#ceCanvas.ce-test .ce-textc *,#ceInlineHost #ceCanvas .ce-textc *{pointer-events:none !important}
+#masterCtlBar{display:inline-flex;align-items:center}
+#mcbBtns{display:inline-flex;align-items:center;gap:6px}
+#mcbTitle{display:none}
+#btnMasterUnpin{background:transparent;border:1px solid var(--border);border-radius:2px;color:var(--muted);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;flex-shrink:0;transition:border-color .12s,color .12s}
+#btnMasterUnpin:hover{border-color:var(--accent);color:var(--accent)}
+#masterCtlBar.mcb-floating{position:fixed;z-index:8999;flex-direction:column;align-items:stretch;background:var(--panel2);border:1px solid var(--border);border-radius:2px;box-shadow:0 8px 30px rgba(0,0,0,.6);touch-action:none;user-select:none}
+#masterCtlBar.mcb-floating #mcbTitle{display:block;padding:5px 8px;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;border-bottom:1px solid var(--border);cursor:grab;white-space:nowrap}
+#masterCtlBar.mcb-floating #mcbTitle:active{cursor:grabbing}
+#masterCtlBar.mcb-floating #mcbBtns{padding:7px 8px}
+#masterCtlBar.mcb-floating #btnMasterUnpin{color:var(--accent);border-color:var(--accent)}
+#mcbVol{display:inline-flex;align-items:center;gap:6px;font-size:11px;letter-spacing:1px;color:var(--red);white-space:nowrap}
+#mcbVol input[type=range]{width:96px;min-width:0;accent-color:var(--red);margin:0;cursor:pointer}
+#svMasterVolBar{min-width:38px;text-align:right}

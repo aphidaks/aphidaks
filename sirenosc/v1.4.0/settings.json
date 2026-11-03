@@ -1,0 +1,12 @@
+{
+  "announcement": {
+    "show": true,
+    "text": "Unfortunately, due to the traffic produced by this website, the server's bandwidth limit causes the site to become inaccessible by the end of the month. To prevent downtimes, and to keep this website ad free, you may help with the server costs on Ko-Fi. Thanks!",
+    "ps": "(PS, I'm a student which means I have no way of funding this website.)",
+    "button": {
+      "show": true,
+      "label": "SUPPORT ON KO-FI",
+      "url": "https://ko-fi.com/aphidaks"
+    }
+  }
+}

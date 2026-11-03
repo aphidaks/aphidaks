@@ -1,0 +1,3 @@
+
+  #serverCostBannerBody{transition:max-height 0.35s ease, opacity 0.3s ease, transform 0.35s ease}
+  #serverCostBannerBody.scb-noanim{transition:none}

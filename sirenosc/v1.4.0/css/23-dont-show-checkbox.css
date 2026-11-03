@@ -1,0 +1,5 @@
+
+.dont-show-again-wrap input[type=checkbox]{width:14px !important;min-width:14px !important;height:14px !important;flex:0 0 14px !important;margin:0 !important;border:1px solid var(--muted) !important;border-radius:2px !important;background:var(--inset) !important}
+.dont-show-again-wrap input[type=checkbox]::after{content:'' !important;position:absolute !important;left:4px !important;top:1px !important;width:4px !important;height:8px !important;border:solid #0b0c0d !important;border-width:0 2px 2px 0 !important;border-radius:0 !important;background:transparent !important;transform:rotate(45deg) scale(0) !important;transition:transform .12s}
+.dont-show-again-wrap input[type=checkbox]:checked{background:var(--accent) !important;border-color:var(--accent) !important}
+.dont-show-again-wrap input[type=checkbox]:checked::after{background:transparent !important;transform:rotate(45deg) scale(1) !important}
