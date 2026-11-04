@@ -1,3 +1,0 @@
-.menu-preset-item.preset-unavailable{color:var(--muted,#7a8190);cursor:not-allowed;user-select:none}
-.menu-preset-item.preset-unavailable:hover{background:transparent;color:var(--muted,#7a8190)}
-.menu-preset-item .preset-soon{margin-left:8px;font-size:.78em;letter-spacing:.5px;text-transform:none;font-style:italic;opacity:.85}

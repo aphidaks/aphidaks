@@ -1,8 +1,0 @@
-
-.mfn-curve-wrap{height:112px !important}
-.mfn-curve-wrap .mfn-curve-label{display:none !important}
-.vz-plot{background:#0b0c0d}
-body.is-light .vz-plot{filter:invert(1) hue-rotate(180deg)}
-body.is-light.theme-old-classic .vz-plot{filter:url(#ocHard) !important}
-body.theme-old-classic .vz-plot{background:#ffffff !important}
-html.glossy .vz-plot{background-color:#0b0c0d !important;background-image:var(--gl-card) !important;border-radius:8px !important}

@@ -1,4 +1,0 @@
-
-@keyframes pleaseWaitSpin { to { transform: rotate(360deg); } }
-#pleaseWaitOverlay .pw-spin, body[class] #pleaseWaitOverlay .pw-spin { border-radius: 50% !important; }
-.cc-throbber::after, body[class] .cc-throbber::after { border-radius: 50% !important; }
